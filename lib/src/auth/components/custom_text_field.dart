@@ -21,6 +21,13 @@ class _CustomTextFieldState extends State<CustomTextField> {
   bool isObscure = false;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    isObscure = widget.isSecret;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
@@ -37,7 +44,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
                         isObscure = !isObscure;
                       });
                     },
-                    icon: const Icon(Icons.visibility))
+                    icon: Icon(
+                        isObscure ? Icons.visibility : Icons.visibility_off))
                 : null,
             labelText: widget.label,
             isDense: true,
