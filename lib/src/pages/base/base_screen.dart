@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:greengrocer/src/home/home_tab.dart';
+
+import '../home/home_tab.dart';
 
 class BaseScreen extends StatefulWidget {
   const BaseScreen({Key? key}) : super(key: key);
@@ -22,7 +23,7 @@ class _BaseScreenState extends State<BaseScreen> {
         controller: pageController,
         children: [
           //Container(color: Colors.red),
-          HomeTab(),
+          const HomeTab(),
           Container(color: Colors.yellow),
           Container(color: Colors.blue),
           Container(color: Colors.purple),
