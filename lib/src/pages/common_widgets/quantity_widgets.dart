@@ -6,13 +6,15 @@ class QuantityWidget extends StatelessWidget {
   final String suffixText;
 
   // funcao reponsavel para calcular valor quantidade
-  final Function(int quantity) result;
+  final Function(int quantity) updatedQuantity;
+  final bool isRemovable;
 
   const QuantityWidget({
     Key? key,
     required this.value,
     required this.suffixText,
-    required this.result,
+    required this.updatedQuantity,
+    this.isRemovable = false,
   }) : super(key: key);
 
   @override
@@ -31,12 +33,21 @@ class QuantityWidget extends StatelessWidget {
         ],
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           // botaos add ou tirar quantidade alimento
           _QuantityButton(
-            icon: Icons.remove,
-            color: Colors.grey,
-            onPressed: () {},
+            icon:
+                //verificando se valor e maior 1 e mudando icon quando valor tiver menor 1
+                !isRemovable || value > 1 ? Icons.remove : Icons.delete_forever,
+            //verificando se valor e maior 1 e mudando color quando valor tiver menor 1
+            color: !isRemovable || value > 1 ? Colors.grey : Colors.red,
+            onPressed: () {
+              if (value == 1 && !isRemovable) return;
+
+              int resultCount = value - 1;
+              updatedQuantity(resultCount);
+            },
           ),
 
           Padding(
@@ -57,7 +68,7 @@ class QuantityWidget extends StatelessWidget {
             onPressed: () {
               int resultCount = value + 1;
 
-              result(resultCount);
+              updatedQuantity(resultCount);
             },
           ),
         ],
