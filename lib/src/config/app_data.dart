@@ -92,17 +92,17 @@ UserModel user = UserModel(
 );
 
 List<OrderModel> orders = [
-  //Pedido
+  //Pedido 1
   OrderModel(
     id: "fsdaferf456",
     status: "pending_payment",
     copyAndPaste: "remjweljslfjsdl",
     total: 11.0,
     createdDateTime: DateTime.parse(
-      "2023-06-12 18:00:10.450",
+      "2023-06-16 18:00:10.450",
     ),
     overdueDateTime: DateTime.parse(
-      "2023-06-12 18:00:10.450",
+      "2023-06-16 18:00:10.450",
     ),
     items: [
       CartItemModel(
@@ -116,17 +116,17 @@ List<OrderModel> orders = [
     ],
   ),
 
-  //Pedido
+  //Pedido 2
   OrderModel(
     id: "46546asd564fsd4",
-    status: "pending_payment",
+    status: "delivered",
     copyAndPaste: "a6545dfasfasfaf",
     total: 11.5,
     createdDateTime: DateTime.parse(
-      "2023-06-14 15:00:10.650",
+      "2023-06-16 11:00:10.650",
     ),
     overdueDateTime: DateTime.parse(
-      "2023-06-14 15:00:10.650",
+      "2023-06-20 17:00:10.650",
     ),
     items: [
       CartItemModel(

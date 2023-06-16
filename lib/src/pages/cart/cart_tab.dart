@@ -5,6 +5,7 @@ import 'package:greengrocer/src/config/app_data.dart' as appData;
 
 import '../../config/custom_colors.dart';
 import '../../models/cart_item_model.dart';
+import '../common_widgets/payment_dialog.dart';
 
 class CartTab extends StatefulWidget {
   const CartTab({Key? key}) : super(key: key);
@@ -110,7 +111,18 @@ class _CartTabState extends State<CartTab> {
                     onPressed: () async {
                       // confimando comprar do barrinho
                       bool? result = await showOrderConfirmation();
-                      print(result);
+                      //print(result);
+                      // se dialog cinfirmacao escolher sim
+                      if (result ?? false) {
+                        showDialog(
+                          context: context,
+                          builder: (_) {
+                            return PaymentDialog(
+                              order: appData.orders.first,
+                            );
+                          },
+                        );
+                      }
                     },
                     child: const Text(
                       'Concluir pedido',
@@ -136,7 +148,7 @@ class _CartTabState extends State<CartTab> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          title: const Text('Confirmacao'),
+          title: const Text('Confirmação'),
           content: const Text('Deseja realmente concluir o pedido?'),
           actions: [
             TextButton(

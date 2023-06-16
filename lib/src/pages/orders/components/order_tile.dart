@@ -4,6 +4,8 @@ import 'package:greengrocer/src/models/order_model.dart';
 import 'package:greengrocer/src/pages/orders/components/order_status_widget.dart';
 import 'package:greengrocer/src/services/utils_services.dart';
 
+import '../../common_widgets/payment_dialog.dart';
+
 class OrderTile extends StatelessWidget {
   final OrderModel order;
 
@@ -23,6 +25,8 @@ class OrderTile extends StatelessWidget {
       child: Theme(
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
+          //verificando se pedito esta pendente e teve cart vai expandido
+          initiallyExpanded: order.status == 'pending_payment',
           title: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,26 +42,30 @@ class OrderTile extends StatelessWidget {
             ],
           ),
           childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(
-              height: 150,
+            //tamanho linha cart
+            IntrinsicHeight(
               child: Row(
                 children: [
                   // Lista de produtos
                   Expanded(
                     flex: 3,
-                    child: ListView(
-                      children: order.items.map((orderItem) {
-                        return _OrderItemWidget(
-                          utilsServices: utilsServices,
-                          orderItem: orderItem,
-                        );
-                        // Container(
-                        //   height: 20,
-                        //   color: Colors.red,
-                        //   margin: const EdgeInsets.only(bottom: 10),
-                        // );
-                      }).toList(),
+                    child: SizedBox(
+                      height: 150,
+                      child: ListView(
+                        children: order.items.map((orderItem) {
+                          return _OrderItemWidget(
+                            utilsServices: utilsServices,
+                            orderItem: orderItem,
+                          );
+                          // Container(
+                          //   height: 20,
+                          //   color: Colors.red,
+                          //   margin: const EdgeInsets.only(bottom: 10),
+                          // );
+                        }).toList(),
+                      ),
                     ),
                   ),
 
@@ -73,13 +81,62 @@ class OrderTile extends StatelessWidget {
                     flex: 2,
                     child: OrderStatusWidget(
                       status: order.status,
-                      isOverdue: order.overdueDateTime.isBefore(DateTime.now()),
+                      isOverdue: order.overdueDateTime.isBefore(
+                        DateTime.now(),
+                      ),
                     ),
                     // Container(
                     //   color: Colors.blue,
                     // ),
                   ),
                 ],
+              ),
+            ),
+
+            //Total
+            Text.rich(
+              TextSpan(
+                style: const TextStyle(
+                  fontSize: 20,
+                ),
+                children: [
+                  const TextSpan(
+                    text: 'Total ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  TextSpan(
+                    text: utilsServices.priceToCurrency(order.total),
+                  ),
+                ],
+              ),
+            ),
+
+            //Botao pagamento
+            Visibility(
+              visible: order.status == "pending_payment",
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (_) {
+                      return PaymentDialog(
+                        order: order,
+                      );
+                    },
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                icon: Image.asset(
+                  'assets/app_images/pix.png',
+                  height: 18,
+                ),
+                label: const Text("Ver QR Code Pix"),
               ),
             )
           ],
