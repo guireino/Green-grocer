@@ -21,6 +21,8 @@ class _CartTabState extends State<CartTab> {
   void removeItemFromCart(CartItemModel cartItem) {
     setState(() {
       appData.cartItems.remove(cartItem);
+      utilsServices.showToast(
+          message: '${cartItem.item.itemName} removido(a) do carrinho!!');
     });
   }
 
@@ -112,7 +114,7 @@ class _CartTabState extends State<CartTab> {
                       // confimando comprar do barrinho
                       bool? result = await showOrderConfirmation();
                       //print(result);
-                      // se dialog cinfirmacao escolher sim
+                      // se dialog confirmação escolher sim
                       if (result ?? false) {
                         showDialog(
                           context: context,
@@ -121,6 +123,11 @@ class _CartTabState extends State<CartTab> {
                               order: appData.orders.first,
                             );
                           },
+                        );
+                      } else {
+                        utilsServices.showToast(
+                          message: "Pedido não confirmado",
+                          isError: true,
                         );
                       }
                     },
