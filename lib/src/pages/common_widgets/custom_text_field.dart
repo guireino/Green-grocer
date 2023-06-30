@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class CustomTextField extends StatefulWidget {
+  final List<TextInputFormatter>? inputFormatters;
+  final TextEditingController? controller;
+
   final IconData icon;
+
   final String label;
+
+  final String? Function(String?)? validator;
   final String? initialValue;
   // variavel isSecret para verificar botao visibility da senha esta ativo ou nao
   final bool isSecret, readOnly;
-  final List<TextInputFormatter>? inputFormatters;
 
   const CustomTextField({
     Key? key,
@@ -17,6 +22,8 @@ class CustomTextField extends StatefulWidget {
     this.readOnly = false,
     this.inputFormatters,
     this.initialValue,
+    this.validator,
+    this.controller,
   }) : super(key: key);
 
   @override
@@ -38,10 +45,12 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: TextFormField(
+        controller: widget.controller,
         readOnly: widget.readOnly,
         initialValue: widget.initialValue,
         inputFormatters: widget.inputFormatters,
         obscureText: isObscure,
+        validator: widget.validator,
         decoration: InputDecoration(
             prefixIcon: Icon(widget.icon),
             suffixIcon: widget.isSecret

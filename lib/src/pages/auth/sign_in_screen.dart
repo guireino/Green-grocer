@@ -1,14 +1,21 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:greengrocer/src/pages/auth/controller/auth_controller.dart';
 import 'package:greengrocer/src/pages/common_widgets/app_name_widget.dart';
+import 'package:greengrocer/src/pages_routes/app_pages.dart';
 
 import '../../config/custom_colors.dart';
-import '../base/base_screen.dart';
 import '../common_widgets/custom_text_field.dart';
-import 'sign_up_screen.dart';
 
 class SignInScreen extends StatelessWidget {
-  const SignInScreen({Key? key}) : super(key: key);
+  SignInScreen({Key? key}) : super(key: key);
+
+  final _formKey = GlobalKey<FormState>();
+
+  // Controller de campos
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -93,116 +100,166 @@ class SignInScreen extends StatelessWidget {
                     top: Radius.circular(45),
                   ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Email
-                    const CustomTextField(
-                      icon: Icons.email,
-                      label: "Email",
-                    ),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Email
+                      CustomTextField(
+                        controller: emailController,
+                        icon: Icons.email,
+                        label: "Email",
+                        validator: (email) {
+                          if (email == null || email.isEmpty) {
+                            return "Digite seu email!";
+                          }
 
-                    // Senha
-                    const CustomTextField(
-                      icon: Icons.lock,
-                      label: "Senha",
-                      isSecret: true,
-                    ),
+                          if (!email.isNotEmpty) {
+                            return "Digite um email valido!";
+                          }
 
-                    // Botao de entrar
-                    SizedBox(
-                      height: 50,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (c) {
-                                return const BaseScreen();
-                              },
-                            ),
-                          );
+                          return null;
                         },
-                        child: const Text(
-                          'Entrar',
-                          style: TextStyle(
-                            fontSize: 18,
-                          ),
-                        ),
                       ),
-                    ),
 
-                    // Esqueceu a senha
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          'Esqueceu a senha?',
-                          style: TextStyle(
-                              color: CustomColors.customContrastColor),
-                        ),
-                      ),
-                    ),
+                      // Senha
+                      CustomTextField(
+                        controller: passwordController,
+                        icon: Icons.lock,
+                        label: "Senha",
+                        isSecret: true,
+                        validator: (password) {
+                          if (password == null || password.isEmpty) {
+                            return "Digite sua senha!";
+                          }
 
-                    // Divisor
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Divider(
-                              color: Colors.grey.withAlpha(90),
-                              thickness: 2,
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 15),
-                            child: Text('Ou'),
-                          ),
-                          Expanded(
-                            child: Divider(
-                              color: Colors.grey.withAlpha(90),
-                              thickness: 2,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                          if (password.length < 7) {
+                            return "Digite uma senha com pelos menos 7 caracteres.";
+                          }
 
-                    //Botao novo user
-                    SizedBox(
-                      height: 50,
-                      child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                          side: const BorderSide(
-                            width: 2,
-                            color: Colors.green,
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (c) {
-                              return SignUpScreen();
-                            }),
-                          );
+                          return null;
                         },
-                        child: const Text(
-                          'Criar conta',
-                          style: TextStyle(
-                            fontSize: 18,
+                      ),
+
+                      // Botao de entrar
+                      SizedBox(
+                        height: 50,
+                        //GetX buscando intancia na memoria do AuthController
+                        child: GetX<AuthController>(
+                          builder: (authController) {
+                            return ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18),
+                                ),
+                              ),
+                              //deixando botao por um tempo desativado
+                              onPressed: authController.isLoading.value
+                                  ? null
+                                  : () {
+                                      //tirando teclado de foco
+                                      FocusScope.of(context).unfocus();
+
+                                      //criando validacao para verificar se email e senha estao corretos
+                                      if (_formKey.currentState!.validate()) {
+                                        String email = emailController.text;
+                                        String password =
+                                            passwordController.text;
+
+                                        // print("Email:  - Senha ");
+                                        //print("Todos os campos estao validos!");
+                                        authController.signIn(
+                                          email: email,
+                                          password: password,
+                                        );
+                                      } else {
+                                        print("Campos não validos!");
+                                      }
+                                    },
+                              child: authController.isLoading.value
+                                  ? const CircularProgressIndicator()
+                                  : const Text(
+                                      'Entrar',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                            );
+                          },
+                        ),
+                      ),
+
+                      // Esqueceu a senha
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                          onPressed: () {},
+                          child: Text(
+                            'Esqueceu a senha?',
+                            style: TextStyle(
+                                color: CustomColors.customContrastColor),
                           ),
                         ),
                       ),
-                    )
-                  ],
+
+                      // Divisor
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Divider(
+                                color: Colors.grey.withAlpha(90),
+                                thickness: 2,
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              child: Text('Ou'),
+                            ),
+                            Expanded(
+                              child: Divider(
+                                color: Colors.grey.withAlpha(90),
+                                thickness: 2,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      //Botao novo user
+                      SizedBox(
+                        height: 50,
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18),
+                            ),
+                            side: const BorderSide(
+                              width: 2,
+                              color: Colors.green,
+                            ),
+                          ),
+                          onPressed: () {
+                            // Navigator.of(context).push(
+                            //   MaterialPageRoute(builder: (c) {
+                            //     return SignUpScreen();
+                            //   }),
+                            // );
+
+                            Get.toNamed(PagesRoutes.signUpRoute);
+                          },
+                          child: const Text(
+                            'Criar conta',
+                            style: TextStyle(
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ],
