@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import 'package:greengrocer/src/config/custom_colors.dart';
 import 'package:greengrocer/src/pages/common_widgets/app_name_widget.dart';
-import 'package:greengrocer/src/pages_routes/app_pages.dart';
 
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
-
-  @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
+//Era StateFullWidget e mudamos StatelessWidget
+class SplashScreen extends StatelessWidget {
+  
+  /*
   @override
   void initState() {
     // TODO: implement initState
@@ -28,6 +22,8 @@ class _SplashScreenState extends State<SplashScreen> {
       Get.offNamed(PagesRoutes.signInRoute);
     });
   }
+
+  */
 
   @override
   Widget build(BuildContext context) {

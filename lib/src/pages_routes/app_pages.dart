@@ -9,7 +9,7 @@ import '../pages/auth/view/sign_up_screen.dart';
 abstract class AppPages {
   static final pages = <GetPage>[
     GetPage(
-      page: () => const SplashScreen(),
+      page: () => SplashScreen(),
       name: PagesRoutes.splashRoute,
     ),
     GetPage(
