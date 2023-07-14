@@ -11,6 +11,7 @@ class CustomTextField extends StatefulWidget {
   final String label;
 
   final String? Function(String?)? validator;
+  final void Function(String?)? onSaved;
   final String? initialValue;
 
   // variavel isSecret para verificar botao visibility da senha esta ativo ou nao
@@ -25,6 +26,7 @@ class CustomTextField extends StatefulWidget {
     this.inputFormatters,
     this.initialValue,
     this.validator,
+    this.onSaved,
     this.controller,
     this.textInputType,
   }) : super(key: key);
@@ -54,6 +56,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         inputFormatters: widget.inputFormatters,
         obscureText: isObscure,
         validator: widget.validator,
+        onSaved: widget.onSaved,
         keyboardType: widget.textInputType,
         decoration: InputDecoration(
             prefixIcon: Icon(widget.icon),

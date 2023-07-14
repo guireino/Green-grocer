@@ -154,9 +154,10 @@ class SignInScreen extends StatelessWidget {
                                           email: email,
                                           password: password,
                                         );
-                                      } else {
-                                        print("Campos não validos!");
                                       }
+                                      // else {
+                                      //   print("Campos não validos!");
+                                      // }
                                     },
                               child: authController.isLoading.value
                                   ? const CircularProgressIndicator()

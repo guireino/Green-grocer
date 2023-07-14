@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:greengrocer/src/pages/auth/controller/auth_controller.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import '../../../config/custom_colors.dart';
@@ -23,6 +25,7 @@ class SignUpScreen extends StatelessWidget {
   );
 
   final _formKey = GlobalKey<FormState>();
+  final authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -65,46 +68,89 @@ class SignUpScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          const CustomTextField(
+                          CustomTextField(
                             icon: Icons.email,
                             label: 'Email',
+                            onSaved: (value) {
+                              // savaldo valor na memoria dispositivo
+                              authController.user.email = value;
+                            },
                             validator: emailValidator,
                             textInputType: TextInputType.emailAddress,
                           ),
-                          const CustomTextField(
+                          CustomTextField(
                             icon: Icons.lock,
                             label: 'Senha',
+                            onSaved: (value) {
+                              // savaldo valor na memoria dispositivo
+                              authController.user.password = value;
+                            },
                             validator: passwordValidator,
                             isSecret: true,
                           ),
-                          const CustomTextField(
-                              icon: Icons.person, label: 'Nome'),
+                          CustomTextField(
+                            icon: Icons.person,
+                            label: 'Nome',
+                            onSaved: (value) {
+                              // savaldo valor na memoria dispositivo
+                              authController.user.name = value;
+                            },
+                            validator: nameValidator,
+                          ),
                           CustomTextField(
                             icon: Icons.phone,
                             label: 'Celular',
+                            onSaved: (value) {
+                              // savaldo valor na memoria dispositivo
+                              authController.user.phone = value;
+                            },
+                            validator: phoneValidator,
                             textInputType: TextInputType.phone,
                             inputFormatters: [phoneFormatter],
                           ),
                           CustomTextField(
                             icon: Icons.file_copy,
                             label: 'CPF',
+                            onSaved: (value) {
+                              // savaldo valor na memoria dispositivo
+                              authController.user.cpf = value;
+                            },
+                            validator: cpfvalidator,
                             textInputType: TextInputType.number,
                             inputFormatters: [cpfFormatter],
                           ),
                           SizedBox(
                             height: 50,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18),
+                            //utilizando obx para ver returna valor observador
+                            child: Obx(() {
+                              return ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18),
+                                  ),
                                 ),
-                              ),
-                              onPressed: () {},
-                              child: const Text(
-                                'Cadastrar usuario',
-                                style: TextStyle(fontSize: 15),
-                              ),
-                            ),
+                                onPressed: authController.isLoading.value
+                                    ? null
+                                    : () {
+                                        //dirando teclado
+                                        FocusScope.of(context).unfocus();
+                                        //fazendo click cadastro validar canpos
+                                        if (_formKey.currentState!.validate()) {
+                                          _formKey.currentState!.save();
+                                          authController.signUp();
+                                          //print(authController.user);
+                                        }
+                                      },
+                                child: authController.isLoading.value
+                                    ? const CircularProgressIndicator()
+                                    : const Text(
+                                        'Cadastrar usuario',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                              );
+                            }),
                           ),
                         ],
                       ),
