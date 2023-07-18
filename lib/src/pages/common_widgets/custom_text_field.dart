@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class CustomTextField extends StatefulWidget {
+  final GlobalKey<FormFieldState>? formFieldKey;
   final List<TextInputFormatter>? inputFormatters;
   final TextEditingController? controller;
   final TextInputType? textInputType;
@@ -29,6 +30,7 @@ class CustomTextField extends StatefulWidget {
     this.onSaved,
     this.controller,
     this.textInputType,
+    this.formFieldKey,
   }) : super(key: key);
 
   @override
@@ -50,6 +52,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: TextFormField(
+        key: widget.formFieldKey,
         controller: widget.controller,
         readOnly: widget.readOnly,
         initialValue: widget.initialValue,
