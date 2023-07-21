@@ -17,6 +17,7 @@ class UtilsServices {
   Future<String?> getLocalData({required String key}) async {
     await storage.read(key: key);
     print("storage $storage, key $key");
+    return await storage.read(key: key);
   }
 
   // Remove dado salvo localmente

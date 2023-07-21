@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:greengrocer/src/config/custom_colors.dart';
 import 'package:greengrocer/src/pages/product/product_screen.dart';
 
-import '../../../models/item_model.dart';
-import '../../../services/utils_services.dart';
+import '../../../../models/item_model.dart';
+import '../../../../services/utils_services.dart';
 
 class ItemTile extends StatefulWidget {
   final ItemModel item;
@@ -62,7 +62,8 @@ class _ItemTileState extends State<ItemTile> {
                   Expanded(
                     child: Hero(
                       tag: widget.item.imgUrl,
-                      child: Image.asset(
+                      //network vai buscar imagem no servidor
+                      child: Image.network(
                         widget.item.imgUrl,
                         key: imageGk,
                       ),
