@@ -19,6 +19,17 @@ class HomeController extends GetxController {
 
   List<ItemModel> get allProducts => currentCategory?.items ?? [];
 
+  //variavel observado
+  RxString searchTitle = ''.obs;
+
+  bool get isLastPage {
+    if (currentCategory!.items.length < itemsPerPage) {
+      return true;
+    }
+
+    return currentCategory!.pagination * itemsPerPage > allProducts.length;
+  }
+
   void setLoading(bool value, {bool isProduct = false}) {
     // if isProduct for negacao
     if (!isProduct) {
@@ -33,6 +44,16 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+
+    //fazendo esperar um tempo para que usuario escreva
+    debounce(
+      searchTitle,
+      (_) {
+        update();
+        //print(searchTitle);
+      },
+      time: const Duration(milliseconds: 600),
+    );
 
     getAllCategories();
   }
@@ -78,9 +99,51 @@ class HomeController extends GetxController {
     );
   }
 
+  void filterByTitle() {
+    //Apager todos os produtos das categorias
+    for (var category in allCategories) {
+      category.items.clear();
+      category.pagination = 0;
+    }
+
+    if (searchTitle.value.isEmpty) {
+      allCategories.removeAt(0);
+    } else {
+      CategoryModel? c = allCategories.firstWhereOrNull((cat) => cat.id == '');
+
+      if (c == null) {
+        //Criar uma nova categoria com todos
+        final allProductsCategory = CategoryModel(
+          title: 'Todos',
+          id: '',
+          items: [],
+          pagination: 0,
+        );
+
+        allCategories.insert(0, allProductsCategory);
+      } else {
+        c.items.clear();
+        c.pagination = 0;
+      }
+    }
+
+    currentCategory = allCategories.first;
+
+    update();
+    getAllProducts();
+  }
+
+  void loadMoreProducts() {
+    currentCategory!.pagination++;
+
+    getAllProducts(canLoad: false);
+  }
+
   //buscando todos valor no servidor
-  Future<void> getAllProducts() async {
-    setLoading(true, isProduct: true);
+  Future<void> getAllProducts({bool canLoad = true}) async {
+    if (canLoad) {
+      setLoading(true, isProduct: true);
+    }
 
     Map<String, dynamic> body = {
       // utilisando
@@ -96,7 +159,7 @@ class HomeController extends GetxController {
     result.when(
       success: (data) {
         //print(data);
-        currentCategory!.items = data;
+        currentCategory!.items.addAll(data);
       },
       error: (message) {
         utilsServices.showToast(

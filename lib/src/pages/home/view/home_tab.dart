@@ -2,7 +2,7 @@ import 'package:add_to_cart_animation/add_to_cart_animation.dart';
 import 'package:add_to_cart_animation/add_to_cart_icon.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:get/get.dart';
 import 'package:greengrocer/src/pages/common_widgets/custom_shimmer.dart';
 import 'package:greengrocer/src/pages/home/controller/home_controller.dart';
 
@@ -26,6 +26,8 @@ class _HomeTabState extends State<HomeTab> {
 
   GlobalKey<CartIconKey> globalKeyCartItems = GlobalKey<CartIconKey>();
 
+  final searchController = TextEditingController();
+
   late Function(GlobalKey) runAddToCardAnimation;
 
   void itemSelectedCartAnimations(GlobalKey gkImage) {
@@ -36,6 +38,7 @@ class _HomeTabState extends State<HomeTab> {
 
   //bool isLoading = true;
 
+  /*
   @override
   void initState() {
     // TODO: implement initState
@@ -54,6 +57,9 @@ class _HomeTabState extends State<HomeTab> {
     );
     */
   }
+  */
+
+  //final controller = Get.find<HomeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -104,29 +110,57 @@ class _HomeTabState extends State<HomeTab> {
         child: Column(
           children: [
             // campo de pesquisa
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: TextFormField(
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  isDense: true,
-                  hintText: 'Pesquise aqui...',
-                  hintStyle: TextStyle(
-                    color: Colors.grey.shade400,
-                    fontSize: 14,
-                  ),
-                  prefixIcon: Icon(Icons.search,
-                      color: CustomColors.customContrastColor, size: 21),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(60),
-                    borderSide: const BorderSide(
-                      width: 0,
-                      style: BorderStyle.none,
+            GetBuilder<HomeController>(
+              builder: (controller) {
+                return Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: TextFormField(
+                    controller: searchController,
+                    onChanged: (value) {
+                      //print(value);
+                      controller.searchTitle.value = value;
+                    },
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      isDense: true,
+                      hintText: 'Pesquise aqui...',
+                      hintStyle: TextStyle(
+                        color: Colors.grey.shade400,
+                        fontSize: 14,
+                      ),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: CustomColors.customContrastColor,
+                        size: 21,
+                      ),
+                      suffixIcon: controller.searchTitle.value.isNotEmpty
+                          ? IconButton(
+                              onPressed: () {
+                                searchController.clear();
+                                controller.searchTitle.value = '';
+                                FocusScope.of(context).unfocus();
+                              },
+                              icon: Icon(
+                                Icons.close,
+                                color: CustomColors.customContrastColor,
+                                size: 21,
+                              ),
+                              color: CustomColors.customContrastColor,
+                            )
+                          : null,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(60),
+                        borderSide: const BorderSide(
+                          width: 0,
+                          style: BorderStyle.none,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
+                );
+              },
             ),
 
             // categorias
@@ -140,6 +174,12 @@ class _HomeTabState extends State<HomeTab> {
                       ? ListView.separated(
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (_, index) {
+                            if (((index + 1) ==
+                                    controller.allProducts.length) &&
+                                !controller.isLastPage) {
+                              controller.loadMoreProducts();
+                            }
+
                             return CategoryTile(
                               onPressed: () {
                                 controller.selectCategory(
