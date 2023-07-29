@@ -48,10 +48,9 @@ class HomeController extends GetxController {
     //fazendo esperar um tempo para que usuario escreva
     debounce(
       searchTitle,
-      (_) {
-        update();
-        //print(searchTitle);
-      },
+      (_) => filterByTitle(),
+      //update();
+      //print(searchTitle);
       time: const Duration(milliseconds: 600),
     );
 
@@ -112,7 +111,7 @@ class HomeController extends GetxController {
       CategoryModel? c = allCategories.firstWhereOrNull((cat) => cat.id == '');
 
       if (c == null) {
-        //Criar uma nova categoria com todos
+        //Criar uma nova categoria com nome todos
         final allProductsCategory = CategoryModel(
           title: 'Todos',
           id: '',
@@ -149,8 +148,17 @@ class HomeController extends GetxController {
       // utilisando
       'page': currentCategory!.pagination,
       'categoryId': currentCategory!.id,
-      "itemsPerPage": itemsPerPage,
+      'itemsPerPage': itemsPerPage,
     };
+
+    //verificando se barra pesquisa esta vazia
+    if (searchTitle.value.isNotEmpty) {
+      body['title'] = searchTitle.value;
+
+      if (currentCategory!.id == '') {
+        body.remove('categoryId');
+      }
+    }
 
     HomeResult<ItemModel> result = await homeRespository.getAllProducts(body);
 

@@ -3,11 +3,14 @@ import 'package:get/get.dart';
 import 'package:greengrocer/src/pages/auth/controller/auth_controller.dart';
 import 'package:greengrocer/src/pages_routes/app_pages.dart';
 
+import 'src/pages/base/controller/navigation_controller.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   //o get vai intancia objeto AuthController na memoria
   Get.put(AuthController());
+  Get.put(NavigationController());
 
   runApp(const MyApp());
 }

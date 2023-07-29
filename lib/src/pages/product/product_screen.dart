@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:greengrocer/src/pages/base/controller/navigation_controller.dart';
 
 import '../../config/custom_colors.dart';
 import '../../models/item_model.dart';
 import '../../services/utils_services.dart';
+import '../base/controller/navigation_controller.dart';
 import '../common_widgets/quantity_widgets.dart';
 
 class ProductScreen extends StatefulWidget {
@@ -19,6 +22,8 @@ class _ProductScreenState extends State<ProductScreen> {
 
   int cartItemQuantity = 1;
 
+  final navigationController = Get.find<NavigationController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +36,7 @@ class _ProductScreenState extends State<ProductScreen> {
               Expanded(
                 child: Hero(
                   tag: widget.item.imgUrl, //fazendo animacao imagem
-                  child: Image.asset(widget.item.imgUrl),
+                  child: Image.network(widget.item.imgUrl),
                 ),
               ),
               Expanded(
@@ -112,7 +117,14 @@ class _ProductScreenState extends State<ProductScreen> {
                               shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
                           )),
-                          onPressed: () {},
+                          onPressed: () {
+                            // fechar tela
+                            Get.back();
+
+                            // abrir carrinho
+                            navigationController
+                                .navigatePageView(NavigationTabs.cart);
+                          },
                           label: const Text(
                             'Add no carrinho',
                             style: TextStyle(

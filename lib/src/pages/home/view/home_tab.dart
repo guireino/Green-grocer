@@ -219,26 +219,42 @@ class _HomeTabState extends State<HomeTab> {
             GetBuilder<HomeController>(
               builder: (controller) {
                 return Expanded(
-                  //se foi diverente null
+                  //se foi diferente null
                   child: !controller.isProductLoading
-                      ? GridView.builder(
-                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                          physics: const BouncingScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 10,
-                            crossAxisSpacing: 10,
-                            childAspectRatio: 9 / 11.5,
+                      ? Visibility(
+                          visible: (controller.currentCategory?.items ?? [])
+                              .isNotEmpty,
+                          child: GridView.builder(
+                            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                            physics: const BouncingScrollPhysics(),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 10,
+                              crossAxisSpacing: 10,
+                              childAspectRatio: 9 / 11.5,
+                            ),
+                            itemCount: controller
+                                .allProducts.length, //buscando os items list
+                            itemBuilder: (_, index) {
+                              return ItemTile(
+                                item: controller.allProducts[index],
+                                cartAnimationMethod: itemSelectedCartAnimations,
+                              );
+                            },
                           ),
-                          itemCount: controller
-                              .allProducts.length, //buscando os items list
-                          itemBuilder: (_, index) {
-                            return ItemTile(
-                              item: controller.allProducts[index],
-                              cartAnimationMethod: itemSelectedCartAnimations,
-                            );
-                          },
+                          //Se pesquisa nao achar nada sobre que usuario esta pesquisando
+                          replacement: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.search_off,
+                                size: 40,
+                                color: CustomColors.customSwatchColor,
+                              ),
+                              const Text("Não há itens para apresentar"),
+                            ],
+                          ),
                         )
                       //ou
                       : GridView.count(
