@@ -1,7 +1,8 @@
-import 'package:greengrocer/src/constants/endpoints.dart';
+
 import 'package:greengrocer/src/models/item_model.dart';
 import 'package:greengrocer/src/pages/home/result/home_result.dart';
 
+import '../../../constants/endpoints.dart';
 import '../../../models/category_model.dart';
 import '../../../services/http_manager.dart';
 

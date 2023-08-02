@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:greengrocer/src/pages/cart/components/cart_tile.dart';
+import 'package:get/get.dart';
+import 'package:greengrocer/src/pages/cart/view/components/cart_tile.dart';
 import 'package:greengrocer/src/services/utils_services.dart';
 import 'package:greengrocer/src/config/app_data.dart' as appData;
 
-import '../../config/custom_colors.dart';
-import '../../models/cart_item_model.dart';
-import '../common_widgets/payment_dialog.dart';
+import '../../../config/custom_colors.dart';
+import '../../common_widgets/payment_dialog.dart';
+import '../controller/cart_controller.dart';
 
 class CartTab extends StatefulWidget {
   const CartTab({Key? key}) : super(key: key);
@@ -18,22 +19,25 @@ class _CartTabState extends State<CartTab> {
   // class que ira formatar preco
   final UtilsServices utilsServices = UtilsServices();
 
+  /*
   void removeItemFromCart(CartItemModel cartItem) {
-    setState(() {
-      appData.cartItems.remove(cartItem);
-      utilsServices.showToast(
-          message: '${cartItem.item.itemName} removido(a) do carrinho!!');
+     setState(() {
+       appData.cartItems.remove(cartItem);
+       utilsServices.showToast(
+         message: '${cartItem.item.itemName} removido(a) do carrinho!!');
     });
   }
+  */
 
   double cartTotalPrice() {
-    double total = 0;
+    // double total = 0;
 
-    for (var item in appData.cartItems) {
-      total += item.totalPrice();
-    }
+    // for (var item in appData.cartItems) {
+    //   total += item.totalPrice();
+    // }
 
-    return total;
+    // return total;
+    return 0;
   }
 
   @override
@@ -46,25 +50,34 @@ class _CartTabState extends State<CartTab> {
         // lista de itens do carrinho
         children: [
           Expanded(
-              child: ListView.builder(
-            itemCount: appData.cartItems.length,
-            itemBuilder: (_, index) {
-              final cartItem = appData.cartItems[index];
+            child: GetBuilder<CartController>(
+              builder: (controller) {
+                return ListView.builder(
+                  itemCount:
+                      controller.cartItems.length, //appData.cartItems.length,
+                  itemBuilder: (_, index) {
+                    //final cartItem = appData.cartItems[index];
+                    //return Text(appData.cartItems[index].item.itemName);
+                    return CartTile(
+                      cartItem: controller
+                          .cartItems[index], //appData.cartItems[index],
+                      //remove: removeItemFromCart,
 
-              //return Text(appData.cartItems[index].item.itemName);
-              return CartTile(
-                cartItem: appData.cartItems[index],
-                //remove: removeItemFromCart,
-                updatedQuantity: (qtd) {
-                  if (qtd == 0) {
-                    removeItemFromCart(appData.cartItems[index]);
-                  } else {
-                    setState(() => cartItem.quantity = qtd);
-                  }
-                },
-              );
-            },
-          )),
+                      /*
+                            updatedQuantity: (qtd) {
+                              if (qtd == 0) {
+                                removeItemFromCart(appData.cartItems[index]);
+                              } else {
+                                setState(() => cartItem.quantity = qtd);
+                              }
+                            },
+                            */
+                    );
+                  },
+                );
+              },
+            ),
+          ),
           //const SizedBox(height: 20),
 
           // a part prico produto e botao confimar
@@ -92,14 +105,19 @@ class _CartTabState extends State<CartTab> {
                     fontSize: 12,
                   ),
                 ),
-                Text(
-                  // formatar preco
-                  utilsServices.priceToCurrency(cartTotalPrice()),
-                  style: TextStyle(
-                    fontSize: 23,
-                    color: CustomColors.customSwatchColor,
-                    fontWeight: FontWeight.bold,
-                  ),
+                GetBuilder<CartController>(
+                  builder: (controller) {
+                    return Text(
+                      // formatar preco
+                      utilsServices
+                          .priceToCurrency(controller.cartTotalPrice()),
+                      style: TextStyle(
+                        fontSize: 23,
+                        color: CustomColors.customSwatchColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    );
+                  },
                 ),
                 SizedBox(
                   height: 50,

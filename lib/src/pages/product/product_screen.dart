@@ -6,6 +6,7 @@ import '../../config/custom_colors.dart';
 import '../../models/item_model.dart';
 import '../../services/utils_services.dart';
 import '../base/controller/navigation_controller.dart';
+import '../cart/controller/cart_controller.dart';
 import '../common_widgets/quantity_widgets.dart';
 
 class ProductScreen extends StatefulWidget {
@@ -21,6 +22,8 @@ class _ProductScreenState extends State<ProductScreen> {
   final UtilsServices utilsServices = UtilsServices();
 
   int cartItemQuantity = 1;
+
+  final cartController = Get.find<CartController>();
 
   final navigationController = Get.find<NavigationController>();
 
@@ -75,9 +78,9 @@ class _ProductScreenState extends State<ProductScreen> {
                           QuantityWidget(
                             suffixText: widget.item.unit,
                             value: cartItemQuantity,
-                            updatedQuantity: (quantity) {
+                            remove: (quantity) {
                               setState(() {
-                                cartItemQuantity = quantity;
+                                cartItemQuantity = quantity as int;
                               });
                             },
                           ),
@@ -120,6 +123,11 @@ class _ProductScreenState extends State<ProductScreen> {
                           onPressed: () {
                             // fechar tela
                             Get.back();
+
+                            cartController.addItemToCart(
+                              item: widget.item,
+                              quantity: cartItemQuantity,
+                            );
 
                             // abrir carrinho
                             navigationController
