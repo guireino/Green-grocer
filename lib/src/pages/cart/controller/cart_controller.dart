@@ -31,14 +31,36 @@ class CartController extends GetxController {
     return total;
   }
 
-  Future<bool> changeItemQuantity(CartItemModel item, int quantity) async {
-    cartRepository.changeItemQuantity(
+  //metodo que vai fazer mudanca quantidade produto
+  Future<bool> changeItemQuantity({
+    required CartItemModel item,
+    required int quantity,
+  }) async {
+    final result = await cartRepository.changeItemQuantity(
       token: authController.user.token!,
       cartItemId: item.id,
       quantity: quantity,
     );
 
-    return false;
+    if (result) {
+      //verificando quantidade item
+      if (quantity == 0) {
+        cartItems.removeWhere((cartItem) => cartItem.id == item.id);
+      } else {
+        //add item na na primeira vez
+        cartItems.firstWhere((cartItem) => cartItem.id == item.id).quantity =
+            quantity;
+      }
+
+      update();
+    } else {
+      utilsServices.showToast(
+        message: "Ocorreu um erro ao alterar a quantidade do produto",
+        isError: true,
+      );
+    }
+
+    return result;
   }
 
   //passando os dados para cart
@@ -66,7 +88,7 @@ class CartController extends GetxController {
   }
 
   int getItemIndex(ItemModel item) {
-    return cartItems.indexWhere((itemInList) => itemInList.id == item.id);
+    return cartItems.indexWhere((itemInList) => itemInList.item.id == item.id);
   }
 
   Future<void> addItemToCart(
@@ -75,8 +97,22 @@ class CartController extends GetxController {
 
     //verificando se tem ou nao item no carrinho comprar
     if (itemIndex >= 0) {
+      final product = cartItems[itemIndex];
+
+      await changeItemQuantity(
+          item: product, quantity: (product.quantity + quantity));
+
       //ja existe
-      cartItems[itemIndex].quantity += quantity;
+      /*
+      if (result) {
+        cartItems[itemIndex].quantity += quantity;
+      } else {
+        utilsServices.showToast(
+          message: "Ocorreu um erro ao alterar a quantidade do produto",
+          isError: true,
+        );
+      }
+      */
     } else {
       //add info do repositorio
       final CartResult<String> result = await cartRepository.addItemToCart(

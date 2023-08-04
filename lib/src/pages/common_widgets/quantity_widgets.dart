@@ -9,14 +9,14 @@ class QuantityWidget extends StatelessWidget {
 
   // funcao reponsavel para calcular valor quantidade
   //final Function(int quantity) updatedQuantity;
-  final Function(CartItemModel) remove;
+  final Function(CartItemModel) result;
   final bool isRemovable;
 
   const QuantityWidget({
     Key? key,
     required this.value,
     required this.suffixText,
-    required this.remove,
+    required this.result,
     this.isRemovable = false,
   }) : super(key: key);
 

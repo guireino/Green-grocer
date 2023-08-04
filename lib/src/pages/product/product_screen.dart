@@ -10,9 +10,11 @@ import '../cart/controller/cart_controller.dart';
 import '../common_widgets/quantity_widgets.dart';
 
 class ProductScreen extends StatefulWidget {
-  const ProductScreen({Key? key, required this.item}) : super(key: key);
+  ProductScreen({
+    Key? key,
+  }) : super(key: key);
 
-  final ItemModel item;
+  final ItemModel item = Get.arguments;
 
   @override
   State<ProductScreen> createState() => _ProductScreenState();
@@ -78,7 +80,7 @@ class _ProductScreenState extends State<ProductScreen> {
                           QuantityWidget(
                             suffixText: widget.item.unit,
                             value: cartItemQuantity,
-                            remove: (quantity) {
+                            result: (quantity) {
                               setState(() {
                                 cartItemQuantity = quantity as int;
                               });

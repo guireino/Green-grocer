@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:greengrocer/src/config/custom_colors.dart';
-import 'package:greengrocer/src/pages/product/product_screen.dart';
+import 'package:greengrocer/src/pages_routes/app_pages.dart';
 
 import '../../../../models/item_model.dart';
 import '../../../../services/utils_services.dart';
@@ -39,6 +40,7 @@ class _ItemTileState extends State<ItemTile> {
         // Conteudo
         GestureDetector(
           onTap: () {
+            /*
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (c) {
@@ -46,6 +48,10 @@ class _ItemTileState extends State<ItemTile> {
                 },
               ),
             );
+            */
+
+            //navegando pelas paginas utilizando get
+            Get.toNamed(PagesRoutes.productRoute, arguments: widget.item);
           },
           child: Card(
             elevation: 1,
