@@ -1,5 +1,5 @@
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../models/order_model.dart';
 import '../../services/utils_services.dart';
@@ -39,11 +39,16 @@ class PaymentDialog extends StatelessWidget {
                 ),
 
                 //QR Code
-                QrImage(
-                  data: 'dsafsdafsdffsd',
-                  version: QrVersions.auto,
-                  size: 200.0,
+                Image.memory(
+                  utilsServices.decodeQrCodeImage(order.qrCodeImage),
+                  height: 200,
+                  width: 200,
                 ),
+                // QrImage(
+                //   data: 'dsafsdafsdffsd',
+                //   version: QrVersions.auto,
+                //   size: 200.0,
+                // ),
 
                 // Vencimento
                 Text(
@@ -73,7 +78,10 @@ class PaymentDialog extends StatelessWidget {
                       color: Colors.green,
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    //fazendo com o que botao colar funcione
+                    FlutterClipboard.copy(order.copyAndPaste);
+                  },
                   icon: const Icon(
                     Icons.copy,
                     size: 15,

@@ -8,6 +8,8 @@ import 'package:greengrocer/src/pages/home/controller/home_controller.dart';
 
 import '../../../config/custom_colors.dart';
 import '../../../services/utils_services.dart';
+import '../../base/controller/navigation_controller.dart';
+import '../../cart/controller/cart_controller.dart';
 import '../../common_widgets/app_name_widget.dart';
 
 // colocando toda imprementacao desse arquivo numa allies
@@ -27,6 +29,7 @@ class _HomeTabState extends State<HomeTab> {
   GlobalKey<CartIconKey> globalKeyCartItems = GlobalKey<CartIconKey>();
 
   final searchController = TextEditingController();
+  final navigationController = Get.find<NavigationController>();
 
   late Function(GlobalKey) runAddToCardAnimation;
 
@@ -76,25 +79,32 @@ class _HomeTabState extends State<HomeTab> {
               top: 15,
               right: 15,
             ),
-            child: GestureDetector(
-              onTap: () {},
-              child: Badge(
-                badgeColor: CustomColors.customContrastColor,
-                badgeContent: const Text(
-                  '2',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
+            child: GetBuilder<CartController>(
+              builder: (controller) {
+                //icon do carrinho da barra bar
+                return GestureDetector(
+                  onTap: () {
+                    navigationController.navigatePageView(NavigationTabs.cart);
+                  },
+                  child: Badge(
+                    badgeColor: CustomColors.customContrastColor,
+                    badgeContent: Text(
+                      controller.cartItems.length.toString(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                      ),
+                    ),
+                    child: AddToCartIcon(
+                      key: globalKeyCartItems,
+                      icon: Icon(
+                        Icons.shopping_cart,
+                        color: CustomColors.customSwatchColor,
+                      ),
+                    ),
                   ),
-                ),
-                child: AddToCartIcon(
-                  key: globalKeyCartItems,
-                  icon: Icon(
-                    Icons.shopping_cart,
-                    color: CustomColors.customSwatchColor,
-                  ),
-                ),
-              ),
+                );
+              },
             ),
           )
         ],
@@ -215,7 +225,7 @@ class _HomeTabState extends State<HomeTab> {
               },
             ),
 
-            // grid
+            // grid de apresentacao dos produtos
             GetBuilder<HomeController>(
               builder: (controller) {
                 return Expanded(
@@ -237,6 +247,12 @@ class _HomeTabState extends State<HomeTab> {
                             itemCount: controller
                                 .allProducts.length, //buscando os items list
                             itemBuilder: (_, index) {
+                              if ((index + 1) ==
+                                      controller.allProducts.length &&
+                                  !controller.isLastPage) {
+                                controller.loadMoreProducts();
+                              }
+
                               return ItemTile(
                                 item: controller.allProducts[index],
                                 cartAnimationMethod: itemSelectedCartAnimations,

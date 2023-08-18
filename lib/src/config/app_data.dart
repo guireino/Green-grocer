@@ -91,6 +91,8 @@ UserModel user = UserModel(
 );
 
 List<OrderModel> orders = [
+  /*
+
   //Pedido 1
   OrderModel(
     id: "fsdaferf456",
@@ -112,7 +114,7 @@ List<OrderModel> orders = [
       //   item: mango,
       //   quantity: 2,
       // ),
-    ],
+    ], qrCodeImage: '',
   ),
 
   //Pedido 2
@@ -132,6 +134,8 @@ List<OrderModel> orders = [
       //   item: guava,
       //   quantity: 1,
       // ),
-    ],
+    ], qrCodeImage: '',
   ),
+
+  */
 ];

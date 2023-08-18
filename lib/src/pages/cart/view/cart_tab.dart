@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:greengrocer/src/pages/cart/view/components/cart_tile.dart';
 import 'package:greengrocer/src/services/utils_services.dart';
-import 'package:greengrocer/src/config/app_data.dart' as appData;
 
 import '../../../config/custom_colors.dart';
-import '../../common_widgets/payment_dialog.dart';
 import '../controller/cart_controller.dart';
 
 class CartTab extends StatefulWidget {
@@ -18,6 +16,7 @@ class CartTab extends StatefulWidget {
 class _CartTabState extends State<CartTab> {
   // class que ira formatar preco
   final UtilsServices utilsServices = UtilsServices();
+  final cartController = Get.find<CartController>();
 
   /*
   void removeItemFromCart(CartItemModel cartItem) {
@@ -52,6 +51,22 @@ class _CartTabState extends State<CartTab> {
           Expanded(
             child: GetBuilder<CartController>(
               builder: (controller) {
+                //verificando se nao tem produto no carrinho
+                if (controller.cartItems.isEmpty) {
+                  //mensagem avisando que nao tem produto no carrinho com icon
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.remove_shopping_cart,
+                        size: 40,
+                        color: CustomColors.customSwatchColor,
+                      ),
+                      const Text("Não há itens no carrinho"),
+                    ],
+                  );
+                }
+
                 return ListView.builder(
                   itemCount:
                       controller.cartItems.length, //appData.cartItems.length,
@@ -71,7 +86,7 @@ class _CartTabState extends State<CartTab> {
                                 setState(() => cartItem.quantity = qtd);
                               }
                             },
-                            */
+                      */
                     );
                   },
                 );
@@ -121,40 +136,45 @@ class _CartTabState extends State<CartTab> {
                 ),
                 SizedBox(
                   height: 50,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: CustomColors.customSwatchColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18),
-                      ),
-                    ),
-                    onPressed: () async {
-                      // confimando comprar do barrinho
-                      bool? result = await showOrderConfirmation();
-                      //print(result);
-                      // se dialog confirmação escolher sim
-                      if (result ?? false) {
-                        showDialog(
-                          context: context,
-                          builder: (_) {
-                            return PaymentDialog(
-                              order: appData.orders.first,
-                            );
-                          },
-                        );
-                      } else {
-                        utilsServices.showToast(
-                          message: "Pedido não confirmado",
-                          isError: true,
-                        );
-                      }
+                  child: GetBuilder<CartController>(
+                    builder: (controller) {
+                      return ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: CustomColors.customSwatchColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                        ),
+                        onPressed: controller.isCheckoutLoading
+                            ? null
+                            : () async {
+                                // confimando comprar do carrinho
+                                bool? result = await showOrderConfirmation();
+                                //print(result);
+                                // se dialog confirmação escolher sim
+
+                                //se usuario nao confimar conprar
+                                if (result ?? false) {
+                                  cartController.checkoutCart();
+                                }
+
+                                //else {
+                                // utilsServices.showToast(
+                                //   message: "Pedido não confirmado",
+                                //   //isError: true,
+                                // );
+                                //}
+                              },
+                        child: controller.isCheckoutLoading
+                            ? const CircularProgressIndicator()
+                            : const Text(
+                                'Concluir pedido',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
+                      );
                     },
-                    child: const Text(
-                      'Concluir pedido',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
                   ),
                 ),
               ],

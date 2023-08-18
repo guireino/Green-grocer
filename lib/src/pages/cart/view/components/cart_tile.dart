@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:greengrocer/src/models/cart_item_model.dart';
-import 'package:greengrocer/src/pages/cart/controller/cart_controller.dart';
 import 'package:greengrocer/src/pages/common_widgets/quantity_widgets.dart';
 
 import '../../../../config/custom_colors.dart';
 import '../../../../services/utils_services.dart';
+import '../../controller/cart_controller.dart';
 
 class CartTile extends StatefulWidget {
   final CartItemModel cartItem;
@@ -59,12 +59,12 @@ class _CartTileState extends State<CartTile> {
 
         //Quantidade
         trailing: QuantityWidget(
-          value: widget.cartItem.quantity,
           suffixText: widget.cartItem.item.unit,
+          value: widget.cartItem.quantity,
           result: (quantity) {
             controller.changeItemQuantity(
               item: widget.cartItem,
-              quantity: quantity,
+              quantity: quantity as int,
             );
           },
           isRemovable: true,
