@@ -39,7 +39,8 @@ class UtilsServices {
     initializeDateFormatting();
 
     DateFormat dateFormat = DateFormat.yMd('pt_BR').add_Hm();
-    return dateFormat.format(dateTime);
+    return dateFormat.format(dateTime
+        .toLocal()); // add toLocal() para pegar data timezone local do dispositivo
   }
 
   Uint8List decodeQrCodeImage(String value) {

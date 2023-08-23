@@ -64,7 +64,7 @@ class _CartTileState extends State<CartTile> {
           result: (quantity) {
             controller.changeItemQuantity(
               item: widget.cartItem,
-              quantity: quantity as int,
+              quantity: quantity,
             );
           },
           isRemovable: true,

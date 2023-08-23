@@ -9,7 +9,9 @@ part 'order_model.g.dart';
 @JsonSerializable()
 class OrderModel {
   String id;
-  DateTime createdDateTime;
+
+  @JsonKey(name: 'createdAt')
+  DateTime? createdDateTime;
 
   @JsonKey(name: 'due')
   DateTime overdueDateTime;

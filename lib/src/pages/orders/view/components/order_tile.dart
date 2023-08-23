@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:greengrocer/src/models/cart_item_model.dart';
 import 'package:greengrocer/src/models/order_model.dart';
-import 'package:greengrocer/src/pages/orders/components/order_status_widget.dart';
 import 'package:greengrocer/src/services/utils_services.dart';
 
-import '../../common_widgets/payment_dialog.dart';
+import '../../../common_widgets/payment_dialog.dart';
+import 'order_status_widget.dart';
 
 class OrderTile extends StatelessWidget {
   final OrderModel order;
@@ -33,7 +33,8 @@ class OrderTile extends StatelessWidget {
             children: [
               Text('Pedido: ${order.id}'),
               Text(
-                utilsServices.formatDateTime(order.createdDateTime),
+                utilsServices.formatDateTime(
+                    order.createdDateTime!), // order.createdDateTime
                 style: const TextStyle(
                   fontSize: 12,
                   color: Colors.black,

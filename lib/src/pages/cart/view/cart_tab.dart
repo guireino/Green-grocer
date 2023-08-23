@@ -156,6 +156,9 @@ class _CartTabState extends State<CartTab> {
                                 //se usuario nao confimar conprar
                                 if (result ?? false) {
                                   cartController.checkoutCart();
+                                } else {
+                                  utilsServices.showToast(
+                                      message: "Pedido não confirmar");
                                 }
 
                                 //else {

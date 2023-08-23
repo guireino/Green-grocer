@@ -19,13 +19,12 @@ class CartItemModel {
     required this.quantity,
   });
 
-  factory CartItemModel.fromJSON(Map<String, dynamic> json) =>
+  factory CartItemModel.fromJson(Map<String, dynamic> json) =>
       _$CartItemModelFromJson(json);
+
   Map<String, dynamic> toJson() => _$CartItemModelToJson(this);
 
   double totalPrice() => item.price * quantity;
-
-  static fromJson(Map<String, dynamic> e) {}
 
   @override
   String toString() =>

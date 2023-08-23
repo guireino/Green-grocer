@@ -81,6 +81,7 @@ class PaymentDialog extends StatelessWidget {
                   onPressed: () {
                     //fazendo com o que botao colar funcione
                     FlutterClipboard.copy(order.copyAndPaste);
+                    utilsServices.showToast(message: "Código copiado");
                   },
                   icon: const Icon(
                     Icons.copy,

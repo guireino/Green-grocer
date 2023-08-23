@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:greengrocer/src/config/custom_colors.dart';
 
-import '../../models/cart_item_model.dart';
-
 class QuantityWidget extends StatelessWidget {
   final int value;
   final String suffixText;
 
   // funcao reponsavel para calcular valor quantidade
   //final Function(int quantity) updatedQuantity;
-  final Function(CartItemModel) result;
+  final Function(int quantity) result;
   final bool isRemovable;
 
   const QuantityWidget({
@@ -50,6 +48,7 @@ class QuantityWidget extends StatelessWidget {
 
               int resultCount = value - 1;
               //updatedQuantity(resultCount);
+              result(resultCount);
             },
           ),
 
@@ -70,8 +69,8 @@ class QuantityWidget extends StatelessWidget {
             // calculando valor quantidade
             onPressed: () {
               int resultCount = value + 1;
-
               //updatedQuantity(resultCount);
+              result(resultCount);
             },
           ),
         ],
