@@ -82,7 +82,7 @@ class _ProductScreenState extends State<ProductScreen> {
                             value: cartItemQuantity,
                             result: (quantity) {
                               setState(() {
-                                cartItemQuantity = quantity as int;
+                                cartItemQuantity = quantity;
                               });
                             },
                           ),

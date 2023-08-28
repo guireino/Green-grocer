@@ -19,7 +19,7 @@ class UtilsServices {
   // Recupera dado salvo localmente em seguranca
   Future<String?> getLocalData({required String key}) async {
     await storage.read(key: key);
-    print("storage $storage, key $key");
+    //print("storage $storage, key $key");
     return await storage.read(key: key);
   }
 

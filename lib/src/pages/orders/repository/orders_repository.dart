@@ -19,7 +19,7 @@ class OrdersRopository {
       {'orderId': orderId},
     );
 
-    if (result['result'] |= null) {
+    if (result['result'] != null) {
       List<CartItemModel> items =
           List<Map<String, dynamic>>.from(result['result'])
               .map(CartItemModel.fromJson)

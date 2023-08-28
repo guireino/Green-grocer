@@ -147,8 +147,8 @@ class CartController extends GetxController {
       {required ItemModel item, int quantity = 1}) async {
     int itemIndex = getItemIndex(item);
 
-    print('getItemIndex(item) $getItemIndex(item)');
-    print('item $item');
+    //print('getItemIndex(item) $getItemIndex(item)');
+    //print('item $item');
 
     //verificando se tem ou nao item no carrinho comprar
     if (itemIndex >= 0) {
@@ -199,6 +199,6 @@ class CartController extends GetxController {
 
     //atualizando carrinho
     update();
-    print('update');
+    //print('update');
   }
 }

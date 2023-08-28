@@ -15,14 +15,17 @@ class OrdersTab extends StatelessWidget {
       ),
       body: GetBuilder<AllOrdersController>(
         builder: (controller) {
-          return ListView.separated(
-            padding: const EdgeInsets.all(16),
-            physics: const BouncingScrollPhysics(),
-            separatorBuilder: (_, index) => const SizedBox(height: 10),
-            itemBuilder: (_, index) => OrderTile(
-                order: controller.allOrders[index]), // appData.orders[index]
-            // Text(appData.orders[index].id);
-            itemCount: controller.allOrders.length, // appData.orders.length
+          return RefreshIndicator(
+            onRefresh: () => controller.getAllOrders(),
+            child: ListView.separated(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(16),
+              separatorBuilder: (_, index) => const SizedBox(height: 10),
+              itemBuilder: (_, index) => OrderTile(
+                  order: controller.allOrders[index]), // appData.orders[index]
+              // Text(appData.orders[index].id);
+              itemCount: controller.allOrders.length, // appData.orders.length
+            ),
           );
         },
       ),

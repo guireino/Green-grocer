@@ -17,7 +17,7 @@ class ForgotPasswordDialog extends StatelessWidget {
     emailController.text = email;
   }
 
-  final _FormFieldKey = GlobalKey<FormFieldState>();
+  final _formFieldKey = GlobalKey<FormFieldState>();
   final authController = Get.find<AuthController>();
 
   @override
@@ -64,7 +64,7 @@ class ForgotPasswordDialog extends StatelessWidget {
 
                 // Campo de email
                 CustomTextField(
-                  formFieldKey: _FormFieldKey,
+                  formFieldKey: _formFieldKey,
                   controller: emailController,
                   icon: Icons.email,
                   label: 'Email',
@@ -84,7 +84,7 @@ class ForgotPasswordDialog extends StatelessWidget {
                   ),
                   onPressed: () {
                     //verifica senha esta valida
-                    if (_FormFieldKey.currentState!.validate()) {
+                    if (_formFieldKey.currentState!.validate()) {
                       authController.resetPassword(emailController.text);
                       Get.back(result: true);
                     }

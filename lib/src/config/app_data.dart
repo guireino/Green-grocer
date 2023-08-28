@@ -3,6 +3,8 @@ import 'package:greengrocer/src/models/user_model.dart';
 
 import '../models/order_model.dart';
 
+// este arquivo pode ser deletado porque todas informasao vem backend
+
 // instanciando informacao dos produtos
 // ItemModel apple = ItemModel(
 //   imgUrl: 'assets/fruits/apple.png',

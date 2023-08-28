@@ -27,6 +27,9 @@ class OrderModel {
   String copyAndPaste;
   double total;
 
+  //isOverDue returna overdueDateTime para verifica vencimento carrinho
+  bool get isOverDue => overdueDateTime.isBefore(DateTime.now());
+
   OrderModel({
     required this.id,
     required this.createdDateTime,
